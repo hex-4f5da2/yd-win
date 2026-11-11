@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f4f5f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0c0e12" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<title>异动空间</title>
+<style>
+:root{
+  --bg:#f4f5f7;--card:#fff;--ink:#12151b;--ink2:#4b515d;--mut:#8d939f;--line:#ebedf1;--soft:#f4f5f8;
+  --up:#e5383b;--down:#14a058;--accent:#3a5cf5;--warn:#d98300;--hot:#e5383b;--hot-bg:#fdeeee;--warn-bg:#fdf4e3;
+  --shadow:0 1px 2px rgba(16,20,28,.04),0 6px 18px rgba(16,20,28,.045);
+  --num:"DIN Alternate","SF Pro Display",-apple-system,"Helvetica Neue",Arial,sans-serif;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#0c0e12;--card:#16191f;--ink:#eceef2;--ink2:#b4bac5;--mut:#7c8391;--line:#242830;--soft:#1d2027;
+  --up:#ff5a5d;--down:#2fc47a;--accent:#7b96ff;--warn:#f2a43a;--hot:#ff5a5d;--hot-bg:rgba(255,90,93,.14);--warn-bg:rgba(242,164,58,.13);
+  --shadow:none;
+}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{margin:0 auto;max-width:560px;background:var(--bg);color:var(--ink);
+  font:14px/1.5 -apple-system,BlinkMacSystemFont,"PingFang SC","HarmonyOS Sans SC","MiSans","Helvetica Neue",sans-serif;
+  padding:0 16px calc(28px + env(safe-area-inset-bottom))}
+.n{font-family:var(--num);font-variant-numeric:tabular-nums}
+.up{color:var(--up)}.down{color:var(--down)}
+
+/* 顶部 */
+.top{padding:calc(14px + env(safe-area-inset-top)) 0 0}
+.brand{display:flex;justify-content:space-between;align-items:center}
+.brand h1{margin:0;font-size:20px;font-weight:700}
+.live{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mut)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--mut)}
+.dot.on{background:var(--down);animation:pulse 1.8s infinite}
+.dot.pre{background:var(--accent)}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(20,160,88,.5)}70%{box-shadow:0 0 0 7px rgba(20,160,88,0)}100%{box-shadow:0 0 0 0 rgba(20,160,88,0)}}
+.idx{display:flex;justify-content:space-between;margin:10px 0 12px;font-size:12px;color:var(--mut)}
+.idx b{font-weight:600;margin-left:3px}
+
+.search{position:relative;margin-bottom:10px}
+.search svg{position:absolute;left:12px;top:12px;width:18px;height:18px;color:var(--mut)}
+.search input{width:100%;height:42px;border-radius:12px;border:1px solid transparent;background:var(--card);color:var(--ink);
+  padding:0 12px 0 38px;font-size:16px;outline:none;box-shadow:var(--shadow);-webkit-appearance:none}
+.search input:focus{border-color:var(--accent)}
+.sug{position:absolute;left:0;right:0;top:48px;background:var(--card);border-radius:12px;overflow:hidden;z-index:20;
+  box-shadow:0 10px 30px rgba(0,0,0,.18)}
+.sug div{padding:12px 14px;display:flex;justify-content:space-between;border-bottom:1px solid var(--line)}
+.sug div:last-child{border:0}.sug span{color:var(--mut)}
+
+/* 分组 */
+.bar{position:sticky;top:0;z-index:10;background:var(--bg);margin:0 -16px;padding:8px 16px 10px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--line);border-radius:11px;padding:3px;position:relative}
+.tabs button{all:unset;cursor:pointer;text-align:center;padding:7px 4px;font-size:14px;font-weight:600;color:var(--mut);position:relative;z-index:1}
+.tabs button small{font-weight:500;font-size:12px;margin-left:4px}
+.tabs button.on{color:var(--ink)}
+.pill{position:absolute;top:3px;bottom:3px;left:3px;width:calc(50% - 3px);background:var(--card);border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.tabs.anim .pill{transition:transform .25s cubic-bezier(.3,.7,.2,1)}
+.tabs.r .pill{transform:translateX(100%)}
+.prog{font-size:11px;color:var(--mut);margin-top:6px;text-align:center}
+
+/* 卡片 */
+.sec{font-size:12px;color:var(--mut);margin:2px 2px 8px}
+.card{background:var(--card);border-radius:16px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow);cursor:pointer}
+.hd{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.nm{font-size:16px;font-weight:650;line-height:1.3}
+.nm small{font-size:12px;font-weight:400;color:var(--mut);margin-left:6px}
+.st{font-size:12px;color:var(--mut);margin-top:2px}
+.st .w{color:var(--warn)}
+.q{text-align:right;line-height:1.3}
+.q b{display:block;font-size:17px;font-weight:600}
+.q span{font-size:12px;font-weight:600}
+
+.days{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-top:12px}
+.day{background:var(--soft);border-radius:9px;padding:7px 2px 6px;text-align:center;min-width:0}
+.day span{display:block;font-size:10px;color:var(--mut);white-space:nowrap}
+.day b{display:block;font-size:15px;font-weight:650;margin:1px 0;white-space:nowrap}
+.day em{display:block;font-style:normal;font-size:10px;color:var(--mut)}
+.day.hot{background:var(--hot-bg)}.day.hot b{color:var(--hot)}
+.day.warn b{color:var(--warn)}
+
+.det{display:none;margin-top:12px}
+.card.open .det{display:block}
+.mini{display:grid;grid-template-columns:repeat(3,1fr);background:var(--soft);border-radius:10px;padding:8px 0}
+.mini div{text-align:center}
+.mini div+div{border-left:1px solid var(--line)}
+.mini span{display:block;font-size:11px;color:var(--mut)}
+.mini b{font-size:14px;font-weight:600}.mini b small{font-size:11px;color:var(--mut);font-weight:400}
+.fm{font-size:11px;color:var(--mut);margin:8px 2px 4px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-size:11px;font-weight:400;color:var(--mut);text-align:right;padding:8px 0 4px}
+th:first-child,td:first-child{text-align:left}
+td{text-align:right;padding:7px 0;border-top:1px solid var(--line)}
+td small{color:var(--mut);font-size:11px;margin-left:4px}
+td.hot{color:var(--hot);font-weight:600}
+td.ln{color:var(--mut);font-size:12px;width:52px}
+
+.empty{text-align:center;color:var(--mut);padding:40px 0;font-size:13px}
+.err{color:var(--hot)}
+.sk{height:142px;border-radius:16px;margin-bottom:10px;background:linear-gradient(90deg,var(--card) 0,var(--soft) 50%,var(--card) 100%);
+  background-size:200% 100%;animation:sh 1.3s infinite}
+@keyframes sh{0%{background-position:100% 0}100%{background-position:-100% 0}}
+footer{font-size:11px;color:var(--mut);line-height:1.7;margin-top:16px;padding:0 2px}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="brand"><h1>异动空间</h1><div class="live"><i class="dot" id="dot"></i><span class="n" id="phase">连接中</span></div></div>
+  <div class="idx n" id="idx"></div>
+  <div class="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input id="q" type="search" placeholder="搜索代码 / 名称 / 拼音" autocomplete="off" enterkeyhint="search">
+    <div class="sug" id="sug" hidden></div>
+  </div>
+</div>
+<div id="picked"></div>
+<div class="bar">
+  <div class="tabs" id="tabs"><i class="pill"></i>
+    <button data-g="g10" class="on">10日线<small class="n" id="c10"></small></button>
+    <button data-g="g30">30日线<small class="n" id="c30"></small></button>
+  </div>
+  <div class="prog" id="prog" hidden></div>
+</div>
+<div id="list"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div>
+<footer>
+  每格是当天涨多少（相对前收）会触发严重异常波动，下方为触发价。假设股价和指数都不动，窗口每后移一天，触发价随之抬高。红底表示当天一个涨停就会触线。
+  偏离值 = 个股涨幅 − 基准指数涨幅，大盘涨则触发价同步上移。按最先触碰的线分组，10日线含异动次数线。暂不含北交所，仅供参考。
+</footer>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const sg=x=>x>=0?'+':'';
+const pc=(x,d=1)=>x==null?'--':sg(x)+(x*100).toFixed(d)+'%';
+const pv=(x,d=1)=>x==null?'--':(x*100).toFixed(d)+'%';
+const fx=x=>x==null?'--':x.toFixed(2);
+const md=d=>d?d.slice(5):'';
+const wd=d=>'日一二三四五六'[new Date(d+'T12:00:00Z').getUTCDay()];
+const SHORT={d10:'10日',d30:'30日',d3:'次数'};
+const store={get(k){try{return localStorage.getItem(k)}catch(_){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(_){}}};
+const H=location.hash;
+let tab=H.includes('g30')?'g30':H.includes('g10')?'g10':store.get('tab')==='g30'?'g30':'g10';
+let open=new Set(),picked=null,data=null,timer=null,live=false,filling=false;
+
+function status(it){
+  const b=it.bind,L=it.lines,parts=[];
+  if(b){
+    if(b.line==='d3')parts.push(`异动次数线 · 已 ${L.d3.count}/${L.d3.n} 次`);
+    else parts.push(`${SHORT[b.line]}线 · 偏离 ${pv(L[b.line].dev)}`);
+  }
+  if(it.monitor)parts.push(`<span class="w">监控中 剩${it.monitor.days_left}日</span>`);
+  return parts.join(' · ');
+}
+function cell(r,i,it){
+  const b=r.bind;
+  if(!b)return `<div class="day"><span>${i?md(r.date):'今日'}</span><b>--</b><em>&nbsp;</em></div>`;
+  const c=b.limit_hits?'hot':b.day_pct<it.limit_pct*1.5?'warn':'';
+  return `<div class="day n ${c}"><span>${i?md(r.date)+' '+wd(r.date):'今日'}</span><b>${pc(b.day_pct)}</b><em>${fx(b.price)}</em></div>`;
+}
+function detail(it){
+  const L=it.lines,b=it.bind,o=it.outlook||[];
+  const bl=b&&b.line!=='d3'?L[b.line]:L.d10;
+  const fm=bl.stock_pct==null?'':`${b&&b.line==='d30'?'30':'10'}日偏离 = 个股 ${pc(bl.stock_pct,2)} − ${esc(it.index_name)} ${pc(bl.index_pct,2)}（自 ${md(bl.base_date)} 起）`;
+  const rows=o.map((r,i)=>{const x=r.bind;if(!x)return '';
+    return `<tr class="n"><td>${i?md(r.date):'今日'}<small>${i?'周'+wd(r.date):''}</small></td><td class="${x.limit_hits?'hot':''}">${pc(x.day_pct,2)}</td><td>${fx(x.price)}</td><td class="ln">${SHORT[x.line]}</td></tr>`}).join('');
+  return `<div class="det">
+    <div class="mini n"><div><span>10日偏离</span><b>${pv(L.d10.dev,0)}<small> /100%</small></b></div>
+      <div><span>30日偏离</span><b>${pv(L.d30.dev,0)}<small> /200%</small></b></div>
+      <div><span>同向异动</span><b>${L.d3.count}<small> /${L.d3.n}次</small></b></div></div>
+    <div class="fm n">${fm}</div>
+    <table><tr><th>交易日</th><th>需涨</th><th>触发价</th><th>触发线</th></tr>${rows}</table></div>`;
+}
+function card(it,closable){
+  if(it.unsupported)return `<div class="card"><div class="nm">${esc(it.name)}<small>${it.code.slice(2)}</small></div><div class="st">暂不支持该品种（北交所等）</div></div>`;
+  const chg=it.pct>0?'up':it.pct<0?'down':'';
+  const o=it.outlook||[];
+  return `<article class="card ${open.has(it.code)?'open':''}" data-code="${it.code}">
+  <div class="hd"><div><div class="nm">${esc(it.name)}<small class="n">${it.code.slice(2)}</small></div><div class="st">${status(it)}${closable?' · <span data-close="1">移除</span>':''}</div></div>
+    <div class="q n ${chg}"><b>${fx(it.price)}</b><span>${sg(it.pct)}${it.pct.toFixed(2)}%</span></div></div>
+  <div class="days">${o.slice(0,5).map((r,i)=>cell(r,i,it)).join('')}</div>
+  ${detail(it)}
+</article>`;
+}
+function render(){
+  if(!data)return;
+  const g10=[],g30=[];
+  for(const it of data.items)(it.bind&&it.bind.line==='d30'?g30:g10).push(it);
+  $('#c10').textContent=g10.length;$('#c30').textContent=g30.length;
+  $('#tabs').classList.toggle('r',tab==='g30');
+  document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.g===tab));
+  requestAnimationFrame(()=>$('#tabs').classList.add('anim'));
+  const pr=$('#prog');pr.hidden=!data.pending;pr.textContent=data.pending?`补数据中，还剩 ${data.pending} 只`:'';
+  const list=tab==='g10'?g10:g30;
+  if(H.includes('expand')&&list.length&&!open.size)open.add(list[0].code);
+  $('#list').innerHTML=list.length?list.map(x=>card(x)).join('')
+    :`<div class="empty">${data.notice?esc(data.notice):data.pending?'首次加载正在补日线，列表会逐步出现':'这一组目前没有股票'}</div>`;
+}
+function header(m){
+  live=m.trading;
+  $('#dot').className='dot '+(m.trading?'on':m.preopen?'pre':'');
+  $('#phase').textContent=m.preopen?'盘前 · '+md(m.date)+' 收盘':m.trading?'盘中 '+m.time:'已收盘 '+md(m.date);
+  const short={'Ａ股指数':'上证A股','深证Ａ指':'深证A指','创业板综':'创业板综','科创50':'科创50'};
+  $('#idx').innerHTML=m.indexes.map(i=>`<span>${esc(short[i.name]||i.name)}<b class="${i.pct>0?'up':i.pct<0?'down':''}">${sg(i.pct)}${i.pct.toFixed(2)}%</b></span>`).join('');
+}
+async function load(){
+  try{
+    const r=await fetch('/api/pool');let d=null;try{d=await r.json()}catch(_){}
+    if(!r.ok||!d)throw new Error((d&&d.detail)||'服务暂时不可用');
+    data=d;filling=d.pending>0||!!d.notice;header(d.market);render();
+    if(picked)loadPicked(picked,true);
+  }catch(e){if(!data)$('#list').innerHTML=`<div class="empty err">${esc(e.message)}，稍后自动重试</div>`}
+  clearTimeout(timer);timer=setTimeout(load,live||filling?5000:60000);
+}
+async function loadPicked(code,quiet){
+  picked=code;
+  if(!quiet)$('#picked').innerHTML='<div class="sec">查询结果</div><div class="sk"></div>';
+  try{
+    const r=await fetch('/api/stock/'+code);let d=null;try{d=await r.json()}catch(_){}
+    if(!r.ok||!d||!d.item)throw new Error((d&&(d.detail||d.notice))||'服务暂时不可用，请稍后再试');
+    if(picked!==code)return;
+    if(!quiet)open.add(code);
+    $('#picked').innerHTML='<div class="sec">查询结果</div>'+card(d.item,true);
+  }catch(e){if(!quiet)$('#picked').innerHTML=`<div class="sec">查询结果</div><div class="card empty err">${esc(e.message)}</div>`}
+}
+document.addEventListener('click',e=>{
+  if(e.target.closest('[data-close]')){picked=null;$('#picked').innerHTML='';return}
+  const tb=e.target.closest('#tabs button');
+  if(tb){tab=tb.dataset.g;store.set('tab',tab);render();return}
+  const s=e.target.closest('.sug div[data-code]');
+  if(s){$('#sug').hidden=true;$('#q').value='';$('#q').blur();loadPicked(s.dataset.code);window.scrollTo({top:0,behavior:'smooth'});return}
+  if(!e.target.closest('.search'))$('#sug').hidden=true;
+  const c=e.target.closest('.card[data-code]');
+  if(c){const k=c.dataset.code;open.has(k)?open.delete(k):open.add(k);c.classList.toggle('open')}
+});
+let st=null,seq=0;
+$('#q').addEventListener('input',e=>{
+  clearTimeout(st);const q=e.target.value.trim();
+  if(!q){$('#sug').hidden=true;return}
+  st=setTimeout(async()=>{
+    const my=++seq;
+    try{
+      const d=await (await fetch('/api/search?q='+encodeURIComponent(q))).json();
+      if(my!==seq)return;
+      $('#sug').innerHTML=d.length?d.slice(0,8).map(x=>`<div data-code="${x.code}">${esc(x.name)}<span class="n">${x.code.slice(2)}</span></div>`).join(''):'<div><span>没有匹配的沪深 A 股</span></div>';
+      $('#sug').hidden=false;
+    }catch(_){}
+  },250);
+});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)load()});
+load();
+</script>
+</body>
+</html>
